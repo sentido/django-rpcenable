@@ -118,8 +118,9 @@ class CustomCGIXMLRPCRequestHandler (CGIXMLRPCRequestHandler):
                 lines = traceback.format_exception(exc_type, exc_value, exc_tb)
                 ir.exception = ''.join(lines)
                 ir.save()
+                
             response = xmlrpclib.dumps(
-                xmlrpclib.Fault(1, "%s:%s" % (exc_type, exc_value)),
+                xmlrpclib.Fault(1, u"%s:%s" % (exc_type, exc_value)),
                 encoding=self.encoding, allow_none=self.allow_none,
                 )
 
