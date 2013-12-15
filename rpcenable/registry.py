@@ -222,9 +222,6 @@ class XMLRPCPoint (xmlrpclib.ServerProxy):
         try:
             result = json.dumps(data, ensure_ascii=False, cls=DateTimeAwareJSONEncoder)
         except:
-            L = logging.getLogger(name='rpcenable')
-            L.warning("Unable to JSON encode data for logging. Falling back to repr.",
-                      exc_info=True)
             result = repr(data)
 
         return result
