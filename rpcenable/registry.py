@@ -107,7 +107,10 @@ class CustomCGIXMLRPCRequestHandler (CGIXMLRPCRequestHandler):
             # report exception back to server
             exc_type, exc_value, exc_tb = sys.exc_info()
             if ir:
-                LOG.exception (u'Exception in incoming XMLRPC call: %s' % e)
+                try:
+                    LOG.exception (u'Exception in incoming XMLRPC call: %s' % e)
+                except UnicodeDecodeError:
+                    LOG.exception (u'Exception in incoming XMLRPC call: %s' % unicode(str(e), encoding='UTF8'))
                 if startts:
                     ir.completion_time = Decimal(str(time.time() - startts))
                 else:
@@ -115,8 +118,9 @@ class CustomCGIXMLRPCRequestHandler (CGIXMLRPCRequestHandler):
                 lines = traceback.format_exception(exc_type, exc_value, exc_tb)
                 ir.exception = ''.join(lines)
                 ir.save()
+                
             response = xmlrpclib.dumps(
-                xmlrpclib.Fault(1, "%s:%s" % (exc_type, exc_value)),
+                xmlrpclib.Fault(1, u"%s:%s" % (exc_type, exc_value)),
                 encoding=self.encoding, allow_none=self.allow_none,
                 )
 
