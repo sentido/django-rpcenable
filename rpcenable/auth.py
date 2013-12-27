@@ -102,8 +102,14 @@ def authenticate (nonce, ts, username, signature, user_model=None, user_filter=N
     mysig = compute_signature (nonce, ts, username, user.secret)
     if not mysig==signature:
         raise AuthError (ERR_BAD_SIGNATURE, 'Signature is invalid: %s!=%s' % (mysig, signature))
-    user.last_login = now()
-    user.save()
+
+    # 2013-12-27   - Disabled saving the API user object on every authentication
+    # B.Chervenkov   because updating a single record causes deadlocks in the database
+    #                on higher loads
+    #
+    # user.last_login = now()
+    # user.save()
+    
     return user
 
 def rpcauth (fn=None, user_model=None, user_filter=None):
