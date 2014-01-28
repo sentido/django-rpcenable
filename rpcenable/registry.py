@@ -159,7 +159,7 @@ class RPCRegistry (object):
             self._add_function (f, prefix, name=name)
             return f
 
-        if len (exargs) == 1 and len(exkw) == 0 and (inspect.isfunction(args[0])):
+        if len (exargs) == 1 and len(exkw) == 0 and (inspect.isfunction(exargs[0])):
             # In this case we only got 1 argument, and it is the decorated function
             return outer(exargs[0])
         else:
